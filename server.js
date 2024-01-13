@@ -16,7 +16,7 @@ const cors = require("cors");
 
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "*" } });
+const io = new Server(httpServer, { cors: { origin: "https://chat-app-frontend-xmwz.vercel.app" } });
 
 // Enable CORS for all routes
 // app.use(cors());
