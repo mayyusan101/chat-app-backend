@@ -66,7 +66,7 @@ const register = async (req, res, next) => {
       data: { user: user, token: user.token },
     });
   } catch (err) {
-    next(error);
+    next(err);
   }
 };
 const logout = async (req, res, next) => {
