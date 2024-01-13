@@ -42,4 +42,4 @@ const chatShema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Chat", chatShema);
+module.exports = mongoose.model("Chats", chatShema);
