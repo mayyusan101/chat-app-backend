@@ -22,12 +22,10 @@ const login = async (req, res, next) => {
       { token: newToken },
       { new: true }
     );
-    res
-      .status(200)
-      .json({
-        message: "Login success",
-        data: { user: updatedUser, token: newToken },
-      });
+    res.status(200).json({
+      message: "Login success",
+      data: { user: updatedUser, token: newToken },
+    });
   } catch (err) {
     const error = new Error(err);
     error.message = "Can't login account";
@@ -45,7 +43,7 @@ const register = async (req, res, next) => {
       .json({ message: "Name, email and password are required!" });
   }
   try {
-    const checkUser = await User.findOne({ email });
+    const checkUser = await User.findOne({ email: email });
     if (checkUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -58,13 +56,16 @@ const register = async (req, res, next) => {
       password: hashedPasswrod,
       token: token,
     };
-    const user = await User.create(userData);
-    res
-      .status(201)
-      .json({
-        message: "Register success",
-        data: { user: user, token: user.token },
-      });
+    const user = await User.create({
+      name: name,
+      email: email,
+      password: hashedPasswrod,
+      token: token,
+    });
+    res.status(201).json({
+      message: "Register success",
+      data: { user: user, token: user.token },
+    });
   } catch (err) {
     const error = new Error(err);
     error.message = "Can't create account";

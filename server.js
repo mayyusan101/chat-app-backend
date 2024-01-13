@@ -1,25 +1,50 @@
-const express = require("express");
-require("dotenv").config();
-const http = require("http");
-const socketIO = require("socket.io");
-
-const app = express();
-// Create an HTTP server using Express
-const server = http.createServer(app);
-// Create a socket.io instance by attaching it to the HTTP server
-const io = socketIO(server);
-
-const PORT = process.env.PORT || 5000;
-const dbConnect = require("./config/db");
-colors = require("colors");
-const cors = require("cors");
-
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const userRoutes = require("./routes/userRoutes");
 const messageRoutes = require("./routes/messageRoute");
 const { verifyToken } = require("./middleware/verifyToken");
+require("dotenv").config();
+
+const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const app = express();
+
+const cors = require("cors");
+
+// Enable CORS for all routes
+const corsOptions = {
+  credentials: true,
+  origin: "*", // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["http://localhost:5173"],
+  },
+});
+
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
+
+const PORT = process.env.PORT || 5000;
+const dbConnect = require("./config/db");
+colors = require("colors");
 
 colors.setTheme({
   warn: "yellow",
@@ -33,13 +58,10 @@ app.use(express.urlencoded({ extended: false }));
 // Database setup
 (async () => {
   await dbConnect();
-  server.listen(PORT, () => {
-    console.log(`Server is running on port - ${PORT}`.warn);
-  });
 })();
-
-// Enable CORS for all routes
-app.use(cors());
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port - ${PORT}`.warn);
+});
 
 app.get("/", (req, res, next) => {
   res.status(200).json("Successfully connected to server");
@@ -127,3 +149,8 @@ io.on("connection", (socket) => {
     io.emit("connectedUsers", Object.values(connectedUsers));
   });
 });
+
+// url
+// https://chat-app-frontend-eight-xi.vercel.app/login
+
+// https://chat-app-u3hn.onrender.com/
