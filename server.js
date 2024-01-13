@@ -19,17 +19,11 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
 // Enable CORS for all routes
-app.use(cors());
+// app.use(cors());
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
+  res.header('Access-Control-Allow-Origin', 'https://chat-app-frontend-xmwz.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
