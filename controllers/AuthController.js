@@ -53,12 +53,14 @@ const register = async (req, res, next) => {
       password: hashedPasswrod,
       token: token,
     };
+    console.log("userdata", userData);
     const user = await User.create({
       name: name,
       email: email,
       password: hashedPasswrod,
       token: token,
     });
+  console.log("user", user);
     res.status(201).json({
       message: "Register success",
       data: { user: user, token: user.token },
