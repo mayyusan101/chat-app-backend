@@ -47,6 +47,7 @@ const register = async (req, res, next) => {
       .json({ message: "Name, email and password are required!" });
   }
   try {
+    console.log("here");
     const checkUser = await User.findOne({ email: email });
     console.log({chatUser});
     if (checkUser) {
