@@ -38,7 +38,7 @@ const register = async (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
-    console.log("name", name, "email", email, "password", passwrod);
+    console.log("name", name, "email", email, "password", password);
   if (!name || !email || !password) {
     return res
       .status(422)
