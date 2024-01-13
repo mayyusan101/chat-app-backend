@@ -66,9 +66,7 @@ const register = async (req, res, next) => {
       data: { user: user, token: user.token },
     });
   } catch (err) {
-    const error = new Error(err);
-    error.message = "Can't create account";
-    return next(error);
+    next(error);
   }
 };
 const logout = async (req, res, next) => {
