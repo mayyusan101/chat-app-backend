@@ -9,7 +9,7 @@ const login = async (req, res, next) => {
   const password = req.body.password;
 
   try {
-    const loginUser = await User.findOne({ email: email });
+    const loginUser = await User.findOne({ email });
     if (!loginUser) {
       return res.status(404).json({ message: "Invalid email or password" });
     }
