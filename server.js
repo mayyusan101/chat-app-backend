@@ -14,15 +14,14 @@ const app = express();
 
 const cors = require("cors");
 
-// Enable CORS for all routes
-app.use(cors());
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
+// Enable CORS for all routes
+app.use(cors());
 app.use(function (req, res, next) {
-  const origin = req.headers.origin;
-  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
