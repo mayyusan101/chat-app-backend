@@ -40,6 +40,8 @@ const register = async (req, res, next) => {
   const password = req.body.password;
     console.log("name", name, "email", email, "password", password);
   if (!name || !email || !password) {
+
+    console.log("already exists");
     return res
       .status(422)
       .json({ message: "Name, email and password are required!" });
