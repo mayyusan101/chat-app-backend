@@ -7,6 +7,7 @@ const { default: mongoose } = require("mongoose");
 const login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+
   try {
     const loginUser = await User.findOne({ email: email });
     if (!loginUser) {
@@ -37,6 +38,7 @@ const register = async (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
+    console.log("name", name, "email", email, "password", passwrod);
   if (!name || !email || !password) {
     return res
       .status(422)
@@ -44,6 +46,7 @@ const register = async (req, res, next) => {
   }
   try {
     const checkUser = await User.findOne({ email: email });
+    console.log({chatUser});
     if (checkUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -56,6 +59,7 @@ const register = async (req, res, next) => {
       password: hashedPasswrod,
       token: token,
     };
+    console.log("userData", userData);
     const user = await User.create({
       name: name,
       email: email,
