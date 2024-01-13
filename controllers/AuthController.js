@@ -46,11 +46,12 @@ const register = async (req, res, next) => {
     }
     try {
       const checkUser = await User.findOne({ email });
+      console.log("checkUser", checkUser);
       if (checkUser) {
         return res.status(400).json({ message: "User already exists" });
       }
     } catch (error) {
-      console.log(error);
+      console.log("findOne", error);
     }
     // hash password
     const hashedPasswrod = await bcrypt.hash(password, saltRounds);
