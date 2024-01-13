@@ -35,23 +35,22 @@ const login = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
-    console.log("name", name, "email", email, "password", password);
-  if (!name || !email || !password) {
-
-    console.log("already exists");
-    return res
-      .status(422)
-      .json({ message: "Name, email and password are required!" });
-  }
   try {
-    console.log("here");
-    const checkUser = await User.findOne({ email });
-    console.log({chatUser});
-    if (checkUser) {
-      return res.status(400).json({ message: "User already exists" });
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!name || !email || !password) {
+      return res
+        .status(422)
+        .json({ message: "Name, email and password are required!" });
+    }
+    try {
+      const checkUser = await User.findOne({ email });
+      if (checkUser) {
+        return res.status(400).json({ message: "User already exists" });
+      }
+    } catch (error) {
+      return next(err);
     }
     // hash password
     const hashedPasswrod = await bcrypt.hash(password, saltRounds);
@@ -62,7 +61,6 @@ const register = async (req, res, next) => {
       password: hashedPasswrod,
       token: token,
     };
-    console.log("userData", userData);
     const user = await User.create({
       name: name,
       email: email,
@@ -79,7 +77,6 @@ const register = async (req, res, next) => {
     return next(error);
   }
 };
-
 const logout = async (req, res, next) => {
   try {
     const userId = req.body.userId;
