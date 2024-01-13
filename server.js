@@ -13,13 +13,13 @@ const { Server } = require("socket.io");
 const app = express();
 
 const cors = require("cors");
-
+// Enable CORS for all routes
+app.use(cors());
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "https://chat-app-frontend-xmwz-lzhvnhdlt-mayyusan101.vercel.app" } });
 
-// Enable CORS for all routes
-app.use(cors());
+
 // app.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', 'https://chat-app-frontend-xmwz.vercel.app');
 //   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
