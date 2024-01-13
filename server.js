@@ -13,19 +13,29 @@ const { Server } = require("socket.io");
 const app = express();
 
 const cors = require("cors");
+
 // Enable CORS for all routes
-app.use(cors());
+const corsOptions = {
+  credentials: true,
+  origin: "*", // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
 
 const httpServer = createServer(app);
 
-
-
-// app.use(function (req, res, next) {
-//   res.header('Access-Control-Allow-Origin', 'https://chat-app-frontend-xmwz.vercel.app');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//   next();
-// });
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
 
 const PORT = process.env.PORT || 5000;
 const dbConnect = require("./config/db");
@@ -41,15 +51,40 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Database setup
-(async () => {
+async function main() {
   await dbConnect();
-})();
+}
+main();
+
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port - ${PORT}`.warn);
-  const io = new Server(httpServer, { cors: { origin: "*" } });
-  /* Socket.io handling */
+});
 
-// Store connected users
+app.get("/", (req, res, next) => {
+  res.status(200).json("Successfully connected to server");
+});
+
+// api routes
+app.use("/api/auth", authRoutes);
+app.use("/api/chat", verifyToken, chatRoutes);
+app.use("/api/users", verifyToken, userRoutes);
+app.use("/api/rooms", verifyToken, roomRoutes);
+app.use("/api/messages", verifyToken, messageRoutes);
+
+// error handler
+app.use((err, req, res, next) => {
+  console.log("error".error, err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res
+    .status(err.statusCode || 500)
+    .json({ message: err.message || "Internal Server Error!" });
+});
+
+/* Socket.io handling */
+const io = new Server(httpServer, { cors: { origin: "*" } });
+
 const connectedUsers = {};
 const roomUsers = {};
 
@@ -110,31 +145,6 @@ io.on("connection", (socket) => {
     delete roomUsers[socket.id];
     io.emit("connectedUsers", Object.values(connectedUsers));
   });
-});
-
-  
-});
-
-app.get("/", (req, res, next) => {
-  res.status(200).json("Successfully connected to server");
-});
-
-// api routes
-app.use("/api/auth", authRoutes);
-app.use("/api/chat", verifyToken, chatRoutes);
-app.use("/api/users", verifyToken, userRoutes);
-app.use("/api/rooms", verifyToken, roomRoutes);
-app.use("/api/messages", verifyToken, messageRoutes);
-
-// error handler
-app.use((err, req, res, next) => {
-  console.log("error".error, err);
-  if (res.headersSent) {
-    return next(err);
-  }
-  res
-    .status(err.statusCode || 500)
-    .json({ message: err.message || "Internal Server Error!" });
 });
 
 
