@@ -44,6 +44,7 @@ const register = async (req, res, next) => {
         .status(422)
         .json({ message: "Name, email and password are required!" });
     }
+    console.log("email", email);
     try {
       const checkUser = await User.findOne({ email });
       console.log("checkUser", checkUser);
