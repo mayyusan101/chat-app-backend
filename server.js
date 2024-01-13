@@ -17,7 +17,7 @@ const cors = require("cors");
 // Enable CORS for all routes
 const corsOptions = {
   credentials: true,
-  origin: "*", // Whitelist the domains you want to allow
+  origin: ["https://chat-app-frontend-xmwz.vercel.app"] // Whitelist the domains you want to allow
 };
 
 app.use(cors(corsOptions));
@@ -25,7 +25,7 @@ app.use(cors(corsOptions));
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: ["https://chat-app-frontend-xmwz.vercel.app"],
   },
 });
 
