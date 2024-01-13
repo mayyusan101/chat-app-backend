@@ -32,6 +32,7 @@ const io = new Server(httpServer, {
 app.use(function (req, res, next) {
   const origin = req.headers.origin;
   res.setHeader("Access-Control-Allow-Origin", origin);
+  req.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
