@@ -15,24 +15,14 @@ const app = express();
 const cors = require("cors");
 
 // Enable CORS for all routes
-const corsOptions = {
-  credentials: true,
-  origin: "*" // Whitelist the domains you want to allow
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-  },
-});
+const io = new Server(httpServer, { cors: { origin: "*" } });
 
 app.use(function (req, res, next) {
   const origin = req.headers.origin;
   res.setHeader("Access-Control-Allow-Origin", origin);
-  req.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
