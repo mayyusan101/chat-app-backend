@@ -45,16 +45,12 @@ const register = async (req, res, next) => {
         .json({ message: "Name, email and password are required!" });
     }
     console.log("email", email);
-    try {
       const checkUser = await User.findOne({ email });
       console.log("checkUser", checkUser);
       if (!!checkUser) {
         return res.status(400).json({ message: "User already exists" });
-      }
-    } catch (error) {
-      console.log("findOne", error);
-    }
-    // hash password
+      }else{
+         // hash password
     const hashedPasswrod = await bcrypt.hash(password, saltRounds);
     const token = generateAccessToken(email); // generate token
     const userData = {
@@ -73,6 +69,7 @@ const register = async (req, res, next) => {
       message: "Register success",
       data: { user: user, token: user.token },
     });
+      }
   } catch (err) {
     const error = new Error(err);
     error.message = "Can't create account";
