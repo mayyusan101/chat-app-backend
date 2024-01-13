@@ -17,7 +17,7 @@ const cors = require("cors");
 app.use(cors());
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "https://chat-app-frontend-xmwz-lzhvnhdlt-mayyusan101.vercel.app" } });
+
 
 
 // app.use(function (req, res, next) {
@@ -46,31 +46,8 @@ app.use(express.urlencoded({ extended: false }));
 })();
 httpServer.listen(PORT, () => {
   console.log(`Server is running on port - ${PORT}`.warn);
-});
-
-app.get("/", (req, res, next) => {
-  res.status(200).json("Successfully connected to server");
-});
-
-// api routes
-app.use("/api/auth", authRoutes);
-app.use("/api/chat", verifyToken, chatRoutes);
-app.use("/api/users", verifyToken, userRoutes);
-app.use("/api/rooms", verifyToken, roomRoutes);
-app.use("/api/messages", verifyToken, messageRoutes);
-
-// error handler
-app.use((err, req, res, next) => {
-  console.log("error".error, err);
-  if (res.headersSent) {
-    return next(err);
-  }
-  res
-    .status(err.statusCode || 500)
-    .json({ message: err.message || "Internal Server Error!" });
-});
-
-/* Socket.io handling */
+  const io = new Server(httpServer, { cors: { origin: "*" } });
+  /* Socket.io handling */
 
 // Store connected users
 const connectedUsers = {};
@@ -135,7 +112,29 @@ io.on("connection", (socket) => {
   });
 });
 
-// url
-// https://chat-app-frontend-eight-xi.vercel.app/login
+  
+});
 
-// https://chat-app-u3hn.onrender.com/
+app.get("/", (req, res, next) => {
+  res.status(200).json("Successfully connected to server");
+});
+
+// api routes
+app.use("/api/auth", authRoutes);
+app.use("/api/chat", verifyToken, chatRoutes);
+app.use("/api/users", verifyToken, userRoutes);
+app.use("/api/rooms", verifyToken, roomRoutes);
+app.use("/api/messages", verifyToken, messageRoutes);
+
+// error handler
+app.use((err, req, res, next) => {
+  console.log("error".error, err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res
+    .status(err.statusCode || 500)
+    .json({ message: err.message || "Internal Server Error!" });
+});
+
+
