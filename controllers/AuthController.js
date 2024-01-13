@@ -50,7 +50,7 @@ const register = async (req, res, next) => {
         return res.status(400).json({ message: "User already exists" });
       }
     } catch (error) {
-      return next(err);
+      console.log(error);
     }
     // hash password
     const hashedPasswrod = await bcrypt.hash(password, saltRounds);
